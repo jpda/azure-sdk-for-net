@@ -70,7 +70,8 @@ namespace Azure.Identity
 
             IManagedIdentitySource identitySource = AppServiceV2017ManagedIdentitySource.TryCreate(_pipeline.HttpPipeline, ClientId) ??
                                                     CloudShellManagedIdentitySource.TryCreate(_pipeline.HttpPipeline, ClientId) ??
-                                                    await ImdsManagedIdentitySource.TryCreateAsync(_pipeline.HttpPipeline, ClientId, async, cancellationToken).ConfigureAwait(false);
+                                                    await ImdsManagedIdentitySource.TryCreateAsync(_pipeline.HttpPipeline, ClientId, async, cancellationToken).ConfigureAwait(false) ??
+                                                    await LocalImdsManagedIdentitySource.TryCreateAsync(_pipeline.HttpPipeline, async, cancellationToken).ConfigureAwait(false);
 
             asyncLock.SetValue(identitySource);
             return identitySource;
